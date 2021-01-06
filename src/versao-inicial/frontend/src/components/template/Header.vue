@@ -6,18 +6,27 @@
         <h1 class="title">
             {{title}}
         </h1>
+        <UserDropDown v-if="!hideUserDropDown"/>
     </header>
 </template>
 
+
+
+
+
 <script>
+    import UserDropDown from './userDropDown'
+
     export default{
         name:"Header",
+        components: { UserDropDown },
         data:{
             
         },
         props:  {
             title: String,
-            hideToggle: Boolean
+            hideToggle: Boolean,
+            hideUserDropDown: Boolean
         },computed:{
             icon()  {
                 return this.$store.state.isMenuVisisble ? "fa-angle-left" : "fa-angle-down" 
@@ -29,6 +38,10 @@
         }
     }
 </script>
+
+
+
+
 
 <style>
     .header{

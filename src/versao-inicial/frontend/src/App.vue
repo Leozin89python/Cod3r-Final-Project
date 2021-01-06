@@ -1,11 +1,16 @@
 <template>
 	<div id="app" :class="{'hide-menu': !isMenuVisisble}">
-		<Header title="cod3r  - base de conhecimento" :hideToggle="false"/>
+		<Header title="cod3r  - base de conhecimento"
+		 :hideToggle="false"
+		 :hideUserDropDown="false"/>
 		<Menu />
 		<Content/>
 		<Footer />
 	</div>
 </template>
+
+
+
 
 <script>
  	import {mapState} from 'vuex'
@@ -20,6 +25,9 @@
 		computed:mapState(['isMenuVisisble'])
 	}
 </script>
+
+
+
 
 <style>
 	*{
