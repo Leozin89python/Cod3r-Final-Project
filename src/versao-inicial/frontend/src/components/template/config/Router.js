@@ -16,10 +16,11 @@ const routes =[{
     component:Admin
 }]
 
-export default new VueRouter({
+const router =  new VueRouter({
     mode:'history',
-    routes: routes
+    routes
 })
 
+export default router
 
 
