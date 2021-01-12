@@ -8,23 +8,55 @@
                       <b-form-input id="article-name"
                         type="text"
                         v-model="article.name" required
-                        placeholder="insira o nome da categoria..."
+                        placeholder="informe o Nome do artigo ..."
+                        />
+                  </b-form-group>
+              </b-col>
+          </b-row>
+           <b-row>
+              <b-col xs="12">
+                  <b-form-group label="Descrição:" label-for="article-description">
+                      <b-form-input id="article-description"
+                        type="text"
+                        v-model="article.description" required
+                        placeholder="informe a descrição do artigo ..."
                         />
                   </b-form-group>
               </b-col>
           </b-row>
           <b-row>
               <b-col xs="12">
-                  <b-form-group label="artigo pai:" label-for="article-parentID">
-                      <b-form-select id="article-parentId"
-                        :options="articles"  v-model="article.parentId" 
+                  <b-form-group label="Imagem (URL):" label-for="article-imageUrl">
+                      <b-form-input id="article-imageUrl"
+                        type="text"
+                        v-model="article.imageUrl" required
+                        placeholder="informe a URL da imagem ..."
+                        />
+                  </b-form-group>
+              </b-col>
+          </b-row>
+          <b-row>
+              <b-col xs="12">
+                  <b-form-group label="Categoria:" label-for="article-categoryId">
+                      <b-form-select id="article-categoryId"
+                        :options="articles"  v-model="article.categoryId" 
+                        />
+                  </b-form-group>
+              </b-col>
+          </b-row>
+           <b-row>
+              <b-col xs="12">
+                  <b-form-group label="Autor:" label-for="article-userId">
+                      <b-form-select id="article-userId"
+                        :options="users"  v-model="article.userId" 
                         />
                   </b-form-group>
               </b-col>
           </b-row>
            <b-form-group label="conteúdo:" label-for="article-parentID">
             <VueEditor v-model="article.content"
-            aria-placeholder="informe o conteúdo do artigo ..."/>          
+            placeholder="informe o  conteúdo do artigo ..."
+           />          
            </b-form-group>
        </b-form>
 
@@ -50,6 +82,7 @@
             </b-button>
            </template>    
        </b-table>
+       <b-pagination sixe="md" v-model="page" :total-rows="count" :per-page="limit" />
     </div>
 </template>
 
@@ -84,18 +117,17 @@ import { VueEditor } from 'vue2-editor'
         },
         methods:{
             loadArticles()    {
-                const url = `${baseApiUrl}/articles`
-                axios.get(url).then(res =>{
-                   // this.articles = res.data
-                   this.articles = res.data.map(article =>    {
-                       return   {
-                           ...article, value:article.id, text: article.path
-                       }
-                   })
-                })
+                const url = `${baseApiUrl}/articles?page=${this.page}`
+                axios.get(url).then(res => this.articles = res.data)
             },loadArticle(article, mode='save')    {
                 this.mode = mode
-                this.article = {...article}
+                //this.article = {...article}
+                axios.get(`${baseApiUrl}/articles/${article.id}`)
+                     .then(res  =>  {
+                         this.articles  =  res.data.data
+                         this.count     =  res.data.count
+                         this.limit     =  res.data.limit
+                     })
             },reset()   {
                 this.mode ='save'
                 this.article = {}
@@ -117,9 +149,30 @@ import { VueEditor } from 'vue2-editor'
                          this.reset()
                     })
                     .catch(showError)
+            },loadCategories()  {
+                const url = `${baseApiUrl}/categories`
+                axios.get(url).then(res =>{
+                    this.categories = res.data.map(category =>  {
+                        return {value:category.id,text:category.path}
+                    })
+                })
+            },loadUsers()   {
+                const url = `${baseApiUrl}/users`
+                axios.get(url).then(res =>  {
+                    this.users = res.data.map(user =>{
+                        return {value:user.id,text:`${user.name} - ${user.email}`}
+                    })
+                })
+            }
+        },
+        watch: {
+            page()  {
+                this.loadArticles()
             }
         },mounted() {
-             loadArticles() 
+             this.loadUsers()
+             this.loadCategories()
+             this.loadArticles() 
         }
     }    
 </script>
@@ -130,5 +183,3 @@ import { VueEditor } from 'vue2-editor'
 <style>
     
 </style>
-
-<!-- estou no tempo 5:26 da aula 572  -->
