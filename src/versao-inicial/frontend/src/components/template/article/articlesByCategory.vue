@@ -1,0 +1,78 @@
+<template>
+    <div class="articles-by-category">
+        <pageTitle icon="fa fa-folder-o"
+                :main="category.name" sub="Categoria"/>
+
+        <ul>
+            <li v-for="article in articles" :key="article.id" >
+                {{  article.name  }}
+            </li>
+        </ul>
+        <div class="loadMore">
+            <buton v-if="loadMore"
+                class="btn btn-lg btn-outline-primary"
+                @click="getArticles" 
+            >Carregar mais artigos
+            </buton>
+        </div>
+    </div>
+</template>
+
+
+
+
+
+
+<script>
+    import {baseApiUrl} from '@/global'
+    import axios from 'axios'
+    import PageTitle from '../PageTitle'
+
+    export default  {
+        name:'articlesByCategory',
+        components: { PageTitle },
+        data:  function() {
+            return {
+                category:{},
+                article:[],
+                page:1,
+                loadMore:true   
+            }
+        },methods:{
+            getCategory()   {
+                      const url = `${baseApiUrl}/categories/${this.category.id}`
+                      axios(url).then(res => this.category = res.data)
+            },getArticles() {
+                const url = `${baseApiUrl}/categories/${this.category.id}/articles?page=${this.page}`
+                axios(url).then(res => {
+                    this.articles = this.articles.concat(res.data)
+                    this.page++
+
+                    if(res.data.length === 0) this.loadMore = false 
+                })
+            }
+        },mounted(){
+            this.category.id = this.$route.params.id
+            this.getCategory()
+            this.getArticles()
+        }
+    }
+</script>
+
+
+
+
+
+<style>
+    .articles-by-category ul    {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .articles-by-category .loadMore {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 25px;
+    }
+</style>
