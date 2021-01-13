@@ -5,7 +5,7 @@
 
         <ul>
             <li v-for="article in articles" :key="article.id" >
-                {{  article.name  }}
+               <ArticleItem :article="article"/>
             </li>
         </ul>
         <div class="loadMore">
@@ -27,10 +27,11 @@
     import {baseApiUrl} from '@/global'
     import axios from 'axios'
     import PageTitle from '../PageTitle'
+    import ArticleItem from '../../template/article/articleItem'
 
     export default  {
         name:'articlesByCategory',
-        components: { PageTitle },
+        components: { PageTitle,ArticleItem },
         data:  function() {
             return {
                 category:{},
