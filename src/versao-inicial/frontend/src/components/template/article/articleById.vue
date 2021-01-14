@@ -7,11 +7,11 @@
 
 
 
-
-
+<!-- não implementei os códigos da penúltima aula (aula - 587)-->
 
 
 <script>
+
     import axios from 'axios'
     import {baseApiUrl} from '@/global'
     import PageTitle from '../PageTitle'
